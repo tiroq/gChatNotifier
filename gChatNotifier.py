@@ -58,7 +58,7 @@ class ChatSender:
                   { "widgets": [
                     { "keyValue": {
                         "topLabel": "Alarme",
-                        "content": "asd,
+                        "content": "asd",
                         "contentMultiline": "true"
                       }
                     },
