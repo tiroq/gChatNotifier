@@ -2,7 +2,7 @@
 
 import sys
 import json
-import requests
+import urllib2
 import datetime
 import optparse
 from json import dumps
@@ -97,10 +97,16 @@ class ChatSender:
 
         message_headers = { 'Content-Type': 'application/json; charset=UTF-8'}
 
-        answer = requests.post(url, data=json.dumps(body), headers=message_headers)
-        print(answer)
-        response = answer.json()
-        print(response)
+        # answer = requests.post(url, data=json.dumps(body), headers=message_headers)
+        # print(answer)
+        # response = answer.json()
+        # print(response)
+
+        data = json.dumps(body)
+        req = urllib2.Request(url, data, message_headers)
+        f = urllib2.urlopen(req)
+        response = f.read()
+        f.close()
 
     def readEventThread(self):
         try:
