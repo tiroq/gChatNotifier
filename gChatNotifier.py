@@ -131,10 +131,6 @@ if __name__ == '__main__':
 
     opts, args = options.parse_args()
     webhook_name = opts.webhook
-    msg = sys.argv[2]
 
-    event = msg.split('#')
     cs = ChatSender(webhook_name)
-    cs.sendMessage(event)
-
-
+    cs.sendMessage("event")
