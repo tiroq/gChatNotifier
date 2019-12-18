@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python2
 
 import sys
 import json
@@ -16,18 +16,18 @@ class Sender:
     }
     message_headers = { 'Content-Type': 'application/json; charset=UTF-8'}
 
-    def __init__(self, webhook):
-        
+    def __init__(self, webhook, debug=False):
+        self.debug = debug
         self.url = webhook
         
 
     def _send(self, body):
         data = json.dumps(body)
-        print data
+        if self.debug: print data
         req = urllib2.Request(self.url, data, self.message_headers)
         f = urllib2.urlopen(req)
         response = f.read()
-        print response
+        if self.debug: print response
         f.close()
 
 
