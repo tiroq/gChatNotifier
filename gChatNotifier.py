@@ -41,6 +41,7 @@ class Sender:
         _entries = []
         for entry in entries:
             topLabel, content = entry.split("::")
+            if content == "": content = "empty"
             _entries.append({ "keyValue": {"topLabel": topLabel, "content": content, "contentMultiline": "true"}})
 
         body = {
