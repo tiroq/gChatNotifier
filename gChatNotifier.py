@@ -59,9 +59,9 @@ class Sender:
                 }]
             }
         if len(_entries) > 0:
-            body['cards']['sections'].append({ 'widgets': _entries })
+            body['cards'][0]['sections'].append({ 'widgets': _entries })
         if details_url != '':
-            body['cards']['sections'].append(
+            body['cards'][0]['sections'].append(
                 { 'widgets': [{
                     'buttons': [{ 'textButton': { 'text': 'DETAILS', 'onClick': { 'openLink': { 'url': details_url }}}}]
                     }]
