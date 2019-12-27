@@ -2,12 +2,41 @@
 
 import sys
 import json
+import base64
+import pickle
 import urllib2
 import datetime
 import optparse
 from json import dumps
 
+class WebHookCacher:
+    def __init__(self, webhook=None, file_name='.webhook'):
+        if webhook is not None:
+            self. webhook = webhook
+            self.cache(webhook, file_name)
+        else:
+            self.webhook = self.load_cache(file_name)
 
+    def serialyze(self, data):
+        return data.encode('base64')
+
+    def deserialyze(self, data):
+        return data.decode('base64')
+
+    def cache(self, webhook, file_name):
+        with open(file_name, 'wb') as cache:
+            pickle.dump({'webhook': self.serialyze(webhook)}, cache)
+
+    def load_cache(self, file_name):
+        try:
+            with open(file_name, 'rb') as cache:
+                data = pickle.load(cache)
+                value = data.get('webhook', None)
+                if value is not None:
+                    value = self.deserialyze(data['webhook'])
+                return value
+        except IOError:
+            return None
 class Sender:
     statuses = {
         'fail': 'https://png.pngtree.com/svg/20161208/status_warning_336325.png',
@@ -76,15 +105,26 @@ if __name__ == '__main__':
     options.add_option('-w', '--webhook', type='str', default=None, help='webhook url as is')
     options.add_option('-d', '--delimeter', type='str', default='::', help='delimeter for entry. default "::". e.g.: -e field1::value1')
     options.add_option('-e', '--entry', action='append', dest='entries')
-    options.add_option('--details_url', type='str', default='', help='external link to detailed report')
+    options.add_option('--init', action="store_true", help='cache webhook url to file and use it by default')
     options.add_option('--status', type='str', default='note', help='status of the report(note/pass/fail)')
     options.add_option('--title', type='str', default='Report', help='title of the message')
     options.add_option('--subtitle', type='str', default='Short report', help='subtitle of the message')
+    options.add_option('--details_url', type='str', default='', help='add section with link')
 
     opts, args = options.parse_args()
-    if not opts.webhook:
+    if opts.init:
+        if not opts.webhook:
+            options.error('Please set webhook url via -w key!')
+            sys.exit(1)
+        wh = WebHookCacher(webhook=opts.webhook)
+        sys.exit(0)
+
+    wh = WebHookCacher()
+
+    if not opts.webhook and wh.webhook is None:
         options.error('Please set webhook url via -w key!')
         sys.exit(1)
 
-    service = Sender(opts.webhook, delimeter=opts.delimeter)
+    webhook = opts.webhook if opts.webhook is not None else wh.webhook
+    service = Sender(webhook, delimeter=opts.delimeter)
     service.sendForm(entries=opts.entries, status=opts.status, title=opts.title, subtitle=opts.subtitle, details_url=opts.details_url)
