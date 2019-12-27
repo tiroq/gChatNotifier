@@ -22,7 +22,7 @@ python gChatNotifier.py --init -w <webhook_url>
 ## Send notification
 
 ```bash
-python gChatNotifier.py -e "Time::Future is coming" -e "Label::scenario1_run2 --details_url "google.com" --title "Report" --subtitle="Scenario #1 NightRun"
+python gChatNotifier.py -e "Time::Future is coming" -e "Label::scenario1_run2" --details_url "google.com" --title "Report" --subtitle="Scenario #1 NightRun"
 ```
 
 ![4](images/4.png)
