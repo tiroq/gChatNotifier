@@ -8,6 +8,7 @@ import pickle
 import urllib2
 import datetime
 import optparse
+import subprocess
 from json import dumps
 
 class WebHookCacher:
@@ -99,8 +100,8 @@ class Sender:
             )
         
         if image != '':
-            stream = os.popen("$(curl -F \"file=@{0}\" https://file.io".format(image))
-            image_address = json.load(stream.read())['link']
+            out = subprocess.Popen(['curl', '-F', "\"file=@{0}\"".format(image), 'https://file.io'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            image_address = json.load(out)['link']
             body['cards'][0]['sections'].append(
                 { "widgets": [ { "image": { "imageUrl": image_address } } ] }
             )
