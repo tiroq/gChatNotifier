@@ -1,5 +1,6 @@
 #!/usr/bin/python2
 
+import os
 import sys
 import json
 import base64
