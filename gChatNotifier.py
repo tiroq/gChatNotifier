@@ -1,6 +1,5 @@
 #!/usr/bin/python2
 
-import os
 import sys
 import json
 import base64
@@ -10,7 +9,6 @@ import datetime
 import optparse
 import subprocess
 from json import dumps
-from cStringIO import StringIO
 
 class WebHookCacher:
     def __init__(self, webhook=None, file_name='.webhook'):
@@ -101,9 +99,10 @@ class Sender:
             )
         
         if image != '':
-            p = subprocess.Popen(['curl', '-F', "\"file=@{0}\"".format(image), 'https://file.io'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            cmd = ['curl', '-F', "file=@{0}".format(image), 'https://file.io']
+            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             output, error = p.communicate()
-            image_address = json.load(StringIO(output)['link']
+            image_address = json.loads(output.split('\n')[-1])['link']
             body['cards'][0]['sections'].append(
                 { "widgets": [ { "image": { "imageUrl": image_address } } ] }
             )
