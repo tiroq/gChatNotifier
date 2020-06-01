@@ -65,7 +65,7 @@ class Sender:
         body = { 'text': text }
         self._send(body)
 
-    def sendForm(self, title='', subtitle='', status='note', entries=[], details_url='localhost'):
+    def sendForm(self, title='', subtitle='', status='note', entries=[], details_url='localhost', image=''):
         img = self.statuses.get(status, 'note')
 
         _entries = []
@@ -96,7 +96,14 @@ class Sender:
                     }]
                 }
             )
-
+        
+        if image != '':
+            stream = os.popen("$(curl -F \"file=@{0}\" https://file.io".format(image))
+            image_address = json.load(stream.read())['link']
+            body['cards'][0]['sections'].append(
+                { "widgets": [ { "image": { "imageUrl": image_address } } ] }
+            )
+            
         self._send(body)
 
 if __name__ == '__main__':
@@ -110,6 +117,7 @@ if __name__ == '__main__':
     options.add_option('--title', type='str', default='Report', help='title of the message')
     options.add_option('--subtitle', type='str', default='Short report', help='subtitle of the message')
     options.add_option('--details_url', type='str', default='', help='add section with link')
+    options.add_option('--image', type='str', default='', help='add image')
 
     opts, args = options.parse_args()
     if opts.init:
@@ -127,4 +135,4 @@ if __name__ == '__main__':
 
     webhook = opts.webhook if opts.webhook is not None else wh.webhook
     service = Sender(webhook, delimeter=opts.delimeter)
-    service.sendForm(entries=opts.entries, status=opts.status, title=opts.title, subtitle=opts.subtitle, details_url=opts.details_url)
+    service.sendForm(entries=opts.entries, status=opts.status, title=opts.title, subtitle=opts.subtitle, details_url=opts.details_url, image=opts.image)
