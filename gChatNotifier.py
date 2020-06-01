@@ -106,7 +106,7 @@ class Sender:
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             output, error = p.communicate()
             p.wait()
-            print "file.io: {0}".format(output.split('\n')[-1])
+            print "file.io: {0}".format(output)
             image_address = json.loads(output.split('\n')[-1])['link']
             body['cards'][0]['sections'].append(
                 { "widgets": [ { "image": { "imageUrl": image_address, "onClick": { "openLink": { "url": image_address } } } } ] }
