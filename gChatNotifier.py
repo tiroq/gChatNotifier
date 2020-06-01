@@ -1,5 +1,6 @@
 #!/usr/bin/python2
 
+import os
 import sys
 import json
 import base64
@@ -99,12 +100,14 @@ class Sender:
             )
         
         if image != '':
+            if not os.path.exists(image):
+                print "Not found: {0}".format(image)
             cmd = ['curl', '-F', "file=@{0}".format(image), 'https://file.io']
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             output, error = p.communicate()
             image_address = json.loads(output.split('\n')[-1])['link']
             body['cards'][0]['sections'].append(
-                { "widgets": [ { "image": { "imageUrl": image_address } } ] }
+                { "widgets": [ { "image": { "imageUrl": image_address, "onClick": { "openLink": { "url": image_address } } } } ] }
             )
             
         self._send(body)
