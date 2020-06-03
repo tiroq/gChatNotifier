@@ -108,10 +108,10 @@ class Sender:
             # output, error = p.communicate()
             # p.wait()
             url = 'https://file.io/'
-            files = {'file': open(image, 'rb')}
+            files = {'file': (os.path.split(image)[1], open(image, 'rb')) , 'application/octet-stream'}
             response = requests.post(url, files=files)
             print "file.io response: {0}".format(response.json())
-            image_address = json.loads(response.json())['link']
+            image_address = response.json()['link']
             body['cards'][0]['sections'].append(
                 { "widgets": [ { "image": { "imageUrl": image_address, "onClick": { "openLink": { "url": image_address } } } } ] }
             )
