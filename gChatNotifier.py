@@ -9,7 +9,6 @@ import urllib2
 import datetime
 import optparse
 import requests
-import subprocess
 from json import dumps
 
 class WebHookCacher:
@@ -103,10 +102,6 @@ class Sender:
         if image != '':
             if not os.path.exists(image):
                 print "Not found: {0}".format(image)
-            # cmd = ['curl', '-F', "file=@{0}".format(image), 'https://file.io']
-            # p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            # output, error = p.communicate()
-            # p.wait()
             image_name = os.path.split(image)[1]
             url = 'https://transfer.sh/' + image_name
             headers = {'Max-Downloads': '100'}
