@@ -107,13 +107,13 @@ class Sender:
             # p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             # output, error = p.communicate()
             # p.wait()
-            url = 'https://file.io/'
-            files = {'file': (os.path.split(image)[1], open(image, 'rb')) , 'application/octet-stream'}
-            response = requests.post(url, files=files)
-            print "file.io response: {0}".format(response.json())
-            image_address = response.json()['link']
+            image_name = os.path.split(image)[1]
+            url = 'https://transfer.sh/' + image_name
+            headers = {'Max-Downloads': '100'}
+            response = requests.put(url, data=open(image, 'rb'), headers=headers)
+            print "transfer.sh response: {0}".format(response.text)
             body['cards'][0]['sections'].append(
-                { "widgets": [ { "image": { "imageUrl": image_address, "onClick": { "openLink": { "url": image_address } } } } ] }
+                { "widgets": [ { "image": { "imageUrl": response.text, "onClick": { "openLink": { "url": response.text } } } } ] }
             )
             
         self._send(body)
