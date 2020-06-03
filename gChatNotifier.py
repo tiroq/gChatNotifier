@@ -8,6 +8,7 @@ import pickle
 import urllib2
 import datetime
 import optparse
+import requests
 import subprocess
 from json import dumps
 
@@ -102,12 +103,15 @@ class Sender:
         if image != '':
             if not os.path.exists(image):
                 print "Not found: {0}".format(image)
-            cmd = ['curl', '-F', "file=@{0}".format(image), 'https://file.io']
-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            output, error = p.communicate()
-            p.wait()
-            print "file.io: {0}".format(output)
-            image_address = json.loads(output.split('\n')[-1])['link']
+            # cmd = ['curl', '-F', "file=@{0}".format(image), 'https://file.io']
+            # p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            # output, error = p.communicate()
+            # p.wait()
+            url = 'https://file.io/'
+            files = {'file': open(image, 'rb')}
+            resp = requests.post(url, files=files)
+            print "file.io: {0}".format(resp)
+            image_address = json.loads(resp)['link']
             body['cards'][0]['sections'].append(
                 { "widgets": [ { "image": { "imageUrl": image_address, "onClick": { "openLink": { "url": image_address } } } } ] }
             )
