@@ -110,8 +110,8 @@ class Sender:
             url = 'https://file.io/'
             files = {'file': open(image, 'rb')}
             resp = requests.post(url, files=files)
-            print "file.io: {0}".format(resp)
-            image_address = json.loads(resp)['link']
+            print "file.io: {0}".format(resp.json())
+            image_address = json.loads(resp.json())['link']
             body['cards'][0]['sections'].append(
                 { "widgets": [ { "image": { "imageUrl": image_address, "onClick": { "openLink": { "url": image_address } } } } ] }
             )
