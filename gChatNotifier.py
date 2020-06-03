@@ -109,9 +109,9 @@ class Sender:
             # p.wait()
             url = 'https://file.io/'
             files = {'file': open(image, 'rb')}
-            resp = requests.post(url, files=files)
-            print "file.io: {0}".format(resp.json())
-            image_address = json.loads(resp.json())['link']
+            response = requests.post(url, files=files)
+            print "file.io response: {0}".format(response.json())
+            image_address = json.loads(response.json())['link']
             body['cards'][0]['sections'].append(
                 { "widgets": [ { "image": { "imageUrl": image_address, "onClick": { "openLink": { "url": image_address } } } } ] }
             )
